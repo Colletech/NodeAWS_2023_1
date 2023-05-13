@@ -8,8 +8,6 @@ async function login(req, res, next) {
     const { username, password } = req.body;
     const user = await userService.getUserByUsername(username);
 
-    console.log(user);
-
     if (!user) {
       return res.status(401).send({ message: "Usuario o Password incorrecto" });
     }
