@@ -24,8 +24,26 @@ async function deleteCustomer(id) {
   }
 }
 
+async function getCustomerById(id) {
+  const customer = await Customer.findById(id);
+  return customer;
+}
+
+async function updateCustomer(id, customerData){
+  const customer = await Customer.findById(id);
+  if(!customer) {
+    throw new Error("Cliente no encontrado");
+  }
+  Object.assign(customer, customerData);
+  await customer.save();
+  return customer;
+}
+
+
 module.exports = {
   getAllCustomers,
   createCustomer,
   deleteCustomer,
+  getCustomerById,
+  updateCustomer,
 };
