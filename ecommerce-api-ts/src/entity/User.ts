@@ -1,18 +1,18 @@
-import { Entity, ObjectIdColumn, ObjectId, Column } from "typeorm"
+import { Entity, ObjectIdColumn, ObjectId, Column } from "typeorm";
+import { IsEmail } from "class-validator";
 
-@Entity()
+@Entity("users")
 export class User {
+  @ObjectIdColumn()
+  id: ObjectId;
 
-    @ObjectIdColumn()
-    id: ObjectId
+  @Column()
+  username: string;
 
-    @Column()
-    firstName: string
+  @Column()
+  password: string;
 
-    @Column()
-    lastName: string
-
-    @Column()
-    age: number
-
+  @Column()
+  @IsEmail({}, { message: "El formato del correo electrónico es inválido" })
+  email: string;
 }
