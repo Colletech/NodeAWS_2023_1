@@ -12,10 +12,18 @@ import { ProductService } from '../services/product.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProductDto } from 'src/dto/product.dto';
 
+import { Redis } from 'ioredis';
 @ApiTags('products')
 @Controller('products')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  redis: Redis;
+
+  constructor(private readonly productService: ProductService) {
+    this.redis = new Redis({
+      host: 'localhost',
+      port: 6379,
+    });
+  }
 
   @Get()
   @ApiResponse({
@@ -25,7 +33,16 @@ export class ProductController {
     type: Product,
   })
   async findAll(): Promise<Product[]> {
-    return this.productService.findAll();
+    const cacheProducts = await this.redis.get('productsKey');
+
+    if (cacheProducts) {
+      return JSON.parse(cacheProducts) as Product[];
+    }
+
+    const products = await this.productService.findAll();
+    await this.redis.set('productsKey', JSON.stringify(products));
+
+    return products;
   }
 
   @Get(':id')
