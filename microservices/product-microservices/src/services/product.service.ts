@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { Product } from '../entities/product.entity';
-import { ProductRepository } from '../repositories/product.repository';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ProductDto } from 'src/dto/product.dto';
+import { Repository } from 'typeorm';
 
-@Injectable()
+// @Injectable()
 export class ProductService {
-  constructor(private readonly productRepository: ProductRepository) {}
+  constructor(
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+  ) {}
 
   async findAll(): Promise<Product[]> {
-    return this.productRepository.findAll();
+    return this.productRepository.find();
   }
 
   async findById(id: number): Promise<Product> {
-    return this.productRepository.findById(id);
+    return this.productRepository.findOne({ where: { id: id } });
   }
 
-  async create(product: Product): Promise<Product> {
-    return this.productRepository.create(product);
+  async create(product: ProductDto): Promise<Product> {
+    const newProduct = await this.productRepository.create({
+      name: product.name,
+      price: product.price,
+    });
+
+    await this.productRepository.save(newProduct);
+
+    return newProduct;
   }
 
-  async update(product: Product): Promise<Product> {
-    return this.productRepository.update(product);
+  async update(id: number, product: ProductDto): Promise<Product> {
+    const productById = await this.findById(id);
+
+    Object.assign(productById, product);
+
+    return this.productRepository.save(productById);
   }
 
   async delete(id: number): Promise<any> {
