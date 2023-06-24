@@ -9,7 +9,7 @@ import { Module } from '@nestjs/common';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: 'localhost',
+        host: 'db',
         port: 5432,
         username: 'postgres',
         password: 'Welcome4$',

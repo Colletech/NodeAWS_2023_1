@@ -9,7 +9,6 @@ import { RedisService } from 'nestjs-redis';
 @Module({
   imports: [TypeOrmModule.forFeature([Product]), DatabaseModule],
   controllers: [ProductController],
-  providers: [ProductService
-  ],
+  providers: [ProductService],
 })
 export class AppModule {}

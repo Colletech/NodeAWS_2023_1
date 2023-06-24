@@ -16,13 +16,13 @@ import { Redis } from 'ioredis';
 @ApiTags('products')
 @Controller('products')
 export class ProductController {
-  redis: Redis;
+  // redis: Redis;
 
   constructor(private readonly productService: ProductService) {
-    this.redis = new Redis({
-      host: 'localhost',
-      port: 6379,
-    });
+    // this.redis = new Redis({
+    //   host: 'localhost',
+    //   port: 6379,
+    // });
   }
 
   @Get()
@@ -33,14 +33,14 @@ export class ProductController {
     type: Product,
   })
   async findAll(): Promise<Product[]> {
-    const cacheProducts = await this.redis.get('productsKey');
+    // const cacheProducts = await this.redis.get('productsKey');
 
-    if (cacheProducts) {
-      return JSON.parse(cacheProducts) as Product[];
-    }
+    // if (cacheProducts) {
+    //   return JSON.parse(cacheProducts) as Product[];
+    // }
 
     const products = await this.productService.findAll();
-    await this.redis.set('productsKey', JSON.stringify(products));
+    // await this.redis.set('productsKey', JSON.stringify(products));
 
     return products;
   }
