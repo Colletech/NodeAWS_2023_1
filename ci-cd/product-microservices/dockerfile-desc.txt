@@ -1,0 +1,19 @@
+# Especifica la imagen base a partir de la cual se contruirá la nueva imagen.
+FROM node:18
+
+# Establece el directorio de trabajo dentro del contenedor
+WORKDIR /usr/src/app
+
+# Copia archivos y directorios desde el sistema de archivos local al contenedor
+COPY package*.json ./
+
+# Ejecuta comnados en el contenedor durante el proceso de construcción de la imagen
+RUN npm install
+
+COPY . .
+
+# Especifica los puertos en los que se escuchara cuando el contenedor se ejecute.
+EXPOSE 3000
+
+# Especifica el comando que se ejecutara cuando el contenedor se inicie
+CMD ["npm", "run", "start:prod"]
